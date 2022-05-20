@@ -3,46 +3,63 @@
 
 // Get references to the #generate element
 var generateBtn = document.querySelector("#generate");
-
+// this is the definition of the variables
+let length, upper, lower, symbol, number
 
 
 // This creates the variable that holds true or false for the answer to which criteria is requested
 function criteriaAnswer() {
 
-  const pwLength = Number(window.prompt("Please select a password length between 8-128."))
+  const pwLength = window.prompt("Please select a password length between 8-128.")
   if (!pwLength) {
     return;
-  } else {
-    return pwLength.toString()
   }
-  Console.log(pwLength.toString())
+
+  console.log(pwLength)
+
+  // This will check the number to see if it meets the criteria 
+  // This is the assignment of the variable
+
+  const rawLength = parseInt(pwLength)
+
+  if (isNaN(rawLength)) {
+    alert("Not a number")
+    return
+  } else if (rawLength < 8 || rawLength > 128) {
+    alert("Please choose a number between 8 and 128!")
+    return
+  } else {
+    length = rawLength
+  }
+
+
 
 
   // check for uppercase
-  let confirmUpper = confirm("Do you want Uppercase letters?")
-  if (confirmUpper) {
-    alert("Ok")
+  upper = confirm("Do you want Uppercase letters?")
+  if (upper) {
+    alert("Uppcase letter will be added to password")
     // var upperCase = confirmAnswer()
   } else {
     alert("No Uppercase will be included")
   }
   // check for lowercase
-  let confirmLower = confirm("Do you want Lowercase letters?")
-  if (confirmUpper) {
+  lower = confirm("Do you want Lowercase letters?")
+  if (lower) {
     alert("Lowercase will be added to password.")
   } else {
     alert("Lowercase will be omitted.")
   }
   // check for number
-  let confirmNumber = confirm("Do you want numbers included?")
-  if (confirmNumber) {
+  number = confirm("Do you want numbers included?")
+  if (number) {
     alert("Numbers will be added!")
   } else {
     alert("Numbers will be omitted.")
   }
   // check for symbols
-  let confirmSymbols = confirm("Do you want special symbols included?")
-  if (confirmSymbols) {
+  symbol = confirm("Do you want special symbols included?")
+  if (symbol) {
     alert("Symbols will be added!")
   } else {
     alert("Symbols will be omitted.")
@@ -58,10 +75,42 @@ function generatePassword() {
   console.log("You clicked the button")
   criteriaAnswer()
 
+  // 1. Create a loop that will check if the user has selected to include a criteria, save that state to include in the password generation. If not included then state can be discarded.
+  let randomFunctions = []
+
+  if (upper) {
+    randomFunctions.push(getRandomUpper)
+  }
+
+  if (lower) {
+    randomFunctions.push(getRandomLower)
+  }
+
+  if (number) {
+    randomFunctions.push(getRandomNumber)
+  }
+
+  if (symbol) {
+    randomFunctions.push(getRandomSymbol)
+  }
+
+
+  let password = ""
+  for (let p = 0; p < length; p++) {
+    // This will access a random element in the randomFunctions array
+    let generator = randomFunctions[Math.floor(Math.random() * randomFunctions.length)]
+    // Adding the random elements to the string
+    password = password + generator()
+  }
+
+
+
+
+
   // Need a for loop to go through element of password length then apply random generator to each section of the array then that should be returned as the final password
 
 
-  return "This is still not working"
+  return password
 }
 
 // Write password to the #password input
@@ -84,7 +133,7 @@ const randomElements = {
   lower: getRandomLower,
   upper: getRandomUpper,
   number: getRandomNumber,
-  symbol: getRandomSymbols
+  symbol: getRandomSymbol
 }
 
 // getRandomUpper will get a random uppercase letter
@@ -106,8 +155,8 @@ function getRandomNumber() {
 console.log(getRandomNumber())
 
 // // This will get a random Character
-function getRandomSymbols() {
+function getRandomSymbol() {
   const symbols = "~!@#$%^&*()_+={}';,<.>?"
   return symbols[Math.floor(Math.random() * symbols.length)]
 }
-console.log(getRandomSymbols())
+console.log(getRandomSymbol())
